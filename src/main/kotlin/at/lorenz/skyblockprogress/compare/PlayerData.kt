@@ -126,17 +126,14 @@ class PlayerData {
                     if (member.has("slayer_bosses")) {
                         val slayerBosses = member["slayer_bosses"].asJsonObject
                         for (key in slayerBosses.keySet()) {
-//                            println("key: $key")
                             val slayer = slayerBosses[key].asJsonObject
                             if (slayer.has("xp")) {
                                 val experience = slayer["xp"].asLong
-//                                println("experience: $experience")
                                 val bossKills = mutableMapOf<String, Long>()
                                 data.slayers[key] = SlayerData(experience, bossKills)
                                 for (bossName in slayer.keySet()) {
                                     if (bossName == "xp") continue
                                     val kills = slayer[bossName].asLong
-//                                    println("$bossName = $kills")
                                     bossKills[bossName] = kills
                                 }
                             }
