@@ -117,6 +117,7 @@ class FetchData(private val apiKey: String, players: MutableMap<String, String>)
             }
             member.remove("collection")
             member.remove("pets")
+            member.remove("slayer_bosses")
         }
     }
 
@@ -172,7 +173,6 @@ class FetchData(private val apiKey: String, players: MutableMap<String, String>)
             member.remove("last_save")
             member.remove("soulflow")
             member.remove("slayer_quest")
-            member.remove("daily_runs")
             member.remove("wardrobe_equipped_slot")
             member.remove("autopet")
             member.remove("temp_stat_buffs")
@@ -205,6 +205,8 @@ class FetchData(private val apiKey: String, players: MutableMap<String, String>)
             if (member.has("dungeons")) {
                 val dungeons = member["dungeons"].asJsonObject
                 dungeons.remove("selected_dungeon_class")
+                dungeons.remove("daily_runs")
+                dungeons.remove("treasures")
 
                 if (dungeons.has("dungeon_types")) {
                     val dungeonTypes = dungeons.get("dungeon_types").asJsonObject

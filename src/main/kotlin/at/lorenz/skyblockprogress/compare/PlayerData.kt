@@ -23,6 +23,10 @@ class PlayerData {
     val mythologyData = mutableMapOf<String, Long>()
     var mythologyKills = 0L
 
+    val slayers = mutableMapOf<String, SlayerData>()
+
+    class SlayerData(val experience: Long, val bossKills: Map<String, Long>)
+
     companion object {
         fun grab(uuid: String, file: File): PlayerData {
             val list = file.readLines()
@@ -116,6 +120,26 @@ class PlayerData {
                             val type = pet["type"].asString.lowercase()
                             val exp = pet["exp"].asLong
                             data.pexExperience[type] = exp
+                        }
+                    }
+
+                    if (member.has("slayer_bosses")) {
+                        val slayerBosses = member["slayer_bosses"].asJsonObject
+                        for (key in slayerBosses.keySet()) {
+//                            println("key: $key")
+                            val slayer = slayerBosses[key].asJsonObject
+                            if (slayer.has("xp")) {
+                                val experience = slayer["xp"].asLong
+//                                println("experience: $experience")
+                                val bossKills = mutableMapOf<String, Long>()
+                                data.slayers[key] = SlayerData(experience, bossKills)
+                                for (bossName in slayer.keySet()) {
+                                    if (bossName == "xp") continue
+                                    val kills = slayer[bossName].asLong
+//                                    println("$bossName = $kills")
+                                    bossKills[bossName] = kills
+                                }
+                            }
                         }
                     }
                 }

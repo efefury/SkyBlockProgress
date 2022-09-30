@@ -1,13 +1,11 @@
 package at.lorenz.skyblockprogress.compare
 
-import com.google.gson.GsonBuilder
 import java.io.File
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 
 class CompareData(private val apiKey: String, players: MutableMap<String, String>) {
 
-    private val gson = GsonBuilder().setPrettyPrinting().create()
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm:ss")
 
     init {
@@ -66,6 +64,8 @@ class CompareData(private val apiKey: String, players: MutableMap<String, String
         result.add(makeCompareText("deathCount", first.deathCount, second.deathCount))
         result.add(makeCompareText("statsDeaths", first.statsDeaths, second.statsDeaths))
 
+        compareSlayers(result, first.slayers, second.slayers)
+
         result.add(makeCompareText("mythology kills", first.mythologyKills, second.mythologyKills))
         result.addAll(printListChange("mythology burrows", first.mythologyData, second.mythologyData))
 
@@ -88,10 +88,31 @@ class CompareData(private val apiKey: String, players: MutableMap<String, String
         }
     }
 
+    private fun compareSlayers(
+        result: LinkedHashSet<String>,
+        first: MutableMap<String, PlayerData.SlayerData>,
+        second: MutableMap<String, PlayerData.SlayerData>,
+    ) {
+        for (entry in second) {
+            val slayerType = entry.key
+            val slayerData = entry.value
+            val expFirst = first[slayerType]?.experience ?: 0
+
+            val expSecond = slayerData.experience
+            if (expFirst == expSecond) continue
+
+            val listFirst = first[slayerType]!!.bossKills.fixSlayerName()
+            val listSecond = slayerData.bossKills.fixSlayerName()
+            listFirst["experience"] = expFirst
+            listSecond["experience"] = expSecond
+            result.addAll(printListChange("$slayerType slayer", listFirst, listSecond))
+        }
+    }
+
     private fun printListChange(
         listLabel: String,
-        first: MutableMap<String, Long>,
-        second: MutableMap<String, Long>,
+        first: Map<String, Long>,
+        second: Map<String, Long>,
     ): List<String> {
         val changedStats = mutableMapOf<String, Long>()
         for (entry in second) {
@@ -124,4 +145,11 @@ class CompareData(private val apiKey: String, players: MutableMap<String, String
         val newLine = if (isList) "" else "\n"
         return "$newLine$label: $plus$diffFormat ($aa -> $bb)"
     }
+}
+
+private fun Map<String, Long>.fixSlayerName(): MutableMap<String, Long> {
+    return this.toMutableMap().map { (key, value) ->
+        val tier = key.substring(key.length - 1).toInt() + 1
+        "tier $tier kills" to value
+    }.toMap().toMutableMap()
 }
