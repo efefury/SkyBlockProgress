@@ -86,6 +86,7 @@ class FetchData(private val apiKey: String, players: MutableMap<String, String>)
                 val stats = member["stats"].asJsonObject
                 stats.remove("deaths")
                 stats.remove("kills")
+                stats.remove("total_pet_exp_gained")
                 for (key in stats.keySet().toMutableList()) {
                     if (key.startsWith("kills_")) {
                         stats.remove(key)

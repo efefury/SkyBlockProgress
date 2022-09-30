@@ -58,21 +58,24 @@ class CompareData(private val apiKey: String, players: MutableMap<String, String
         val firstLastSave = dateFormat.format(first.fetchTime)
         val secondLastSave = dateFormat.format(second.fetchTime)
 
-        val result = mutableListOf<String>()
+        val result = linkedSetOf<String>()
 
         result.add(" ")
         result.add("compare $firstLastSave with $secondLastSave")
         result.add(" ")
         result.add(makeCompareText("deathCount", first.deathCount, second.deathCount))
         result.add(makeCompareText("statsDeaths", first.statsDeaths, second.statsDeaths))
+        result.addAll(printListChange("skill experience gain", first.skillExperience, second.skillExperience))
+
+        result.add(makeCompareText("totalPetExpGained", first.totalPetExpGained, second.totalPetExpGained))
 
         result.add(makeCompareText("kills", first.kills, second.kills))
-        result.addAll(printListChange("stats-kills",first.statsKillsReason, second.statsKillsReason))
-        result.addAll(printListChange("skill-exp-gain",first.skillExperience, second.skillExperience))
+        result.addAll(printListChange("stats-kills", first.statsKillsReason, second.statsKillsReason))
 
         for (line in result) {
-            if (line.isEmpty()) continue
-            println(line)
+            if (line.isNotEmpty()) {
+                println(line)
+            }
         }
     }
 
@@ -87,21 +90,21 @@ class CompareData(private val apiKey: String, players: MutableMap<String, String
             val newValue = entry.value
             val oldValue = first.getOrDefault(label, 0)
             if (newValue != oldValue) {
-                changedStats.add(makeCompareText(label, oldValue, newValue))
+                changedStats.add(makeCompareText(label, oldValue, newValue, true))
             }
         }
         val result = mutableListOf<String>()
         if (changedStats.isNotEmpty()) {
             result.add("\n[$listLabel]")
             for (value in changedStats) {
-                result.add("  $value")
+                result.add("   $value")
             }
         }
         return result
     }
 
 
-    private fun makeCompareText(label: String, a: Long, b: Long): String {
+    private fun makeCompareText(label: String, a: Long, b: Long, isList: Boolean = false): String {
         val numberFormatter = DecimalFormat("#,##0")
         val diff = b - a
         if (diff == 0L) return ""
@@ -109,6 +112,7 @@ class CompareData(private val apiKey: String, players: MutableMap<String, String
         val aa = numberFormatter.format(a)
         val bb = numberFormatter.format(b)
         val diffFormat = numberFormatter.format(diff)
-        return "$label: $plus$diffFormat ($aa -> $bb)"
+        val newLine = if (isList) "" else "\n"
+        return "$newLine$label: $plus$diffFormat ($aa -> $bb)"
     }
 }
