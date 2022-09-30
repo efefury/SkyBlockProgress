@@ -101,6 +101,17 @@ class FetchData(private val apiKey: String, players: MutableMap<String, String>)
                     }
                 }
             }
+            if (member.has("bestiary")) {
+                val bestiary = member["bestiary"].asJsonObject
+                for (key in bestiary.keySet().toMutableList()) {
+                    if (key.startsWith("kills_")) {
+                        bestiary.remove(key)
+                    }
+                    if (key.startsWith("deaths_")) {
+                        bestiary.remove(key)
+                    }
+                }
+            }
         }
     }
 

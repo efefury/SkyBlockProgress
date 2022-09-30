@@ -15,6 +15,9 @@ class PlayerData {
     val skillExperience = mutableMapOf<String, Long>()
     var totalPetExpGained = 0L
 
+    val bestiarityKills = mutableMapOf<String, Long>()
+    val bestiarityDeaths = mutableMapOf<String, Long>()
+
     companion object {
         fun grab(uuid: String, file: File): PlayerData {
             val list = file.readLines()
@@ -70,7 +73,21 @@ class PlayerData {
                             data.skillExperience[label] = exp
                         }
                     }
-
+                    if (member.has("bestiary")) {
+                        val bestiary = member["bestiary"].asJsonObject
+                        for (key in bestiary.keySet()) {
+                            if (key.startsWith("kills_")) {
+                                val label = key.substring(6)
+                                val kills = bestiary[key].asLong
+                                data.bestiarityKills[label] = kills
+                            }
+                            if (key.startsWith("deaths_")) {
+                                val label = key.substring(7)
+                                val deaths = bestiary[key].asLong
+                                data.bestiarityDeaths[label] = deaths
+                            }
+                        }
+                    }
                 }
             }
 
