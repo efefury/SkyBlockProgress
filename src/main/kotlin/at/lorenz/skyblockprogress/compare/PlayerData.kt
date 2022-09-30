@@ -20,6 +20,9 @@ class PlayerData {
     val collectionCount = mutableMapOf<String, Long>()
     val pexExperience = mutableMapOf<String, Long>()
 
+    val mythologyData = mutableMapOf<String, Long>()
+    var mythologyKills = 0L
+
     companion object {
         fun grab(uuid: String, file: File): PlayerData {
             val list = file.readLines()
@@ -55,6 +58,9 @@ class PlayerData {
                         if (stats.has("total_pet_exp_gained")) {
                             data.totalPetExpGained = stats["total_pet_exp_gained"].asLong
                         }
+                        if (stats.has("mythos_kills")) {
+                            data.mythologyKills = stats["mythos_kills"].asLong
+                        }
                         for (key in stats.keySet()) {
                             if (key.startsWith("kills_")) {
                                 val label = key.substring(6)
@@ -65,6 +71,11 @@ class PlayerData {
                                 val label = key.substring(7)
                                 val deaths = stats[key].asLong
                                 data.statsDeathsReason[label] = deaths
+                            }
+                            if (key.startsWith("mythos_burrows_")) {
+                                val label = key.substring(15)
+                                val value = stats[key].asLong
+                                data.mythologyData[label] = value
                             }
                         }
                     }

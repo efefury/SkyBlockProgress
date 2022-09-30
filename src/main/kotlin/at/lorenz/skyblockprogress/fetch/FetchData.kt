@@ -86,11 +86,15 @@ class FetchData(private val apiKey: String, players: MutableMap<String, String>)
                 stats.remove("deaths")
                 stats.remove("kills")
                 stats.remove("total_pet_exp_gained")
+                stats.remove("mythos_kills")
                 for (key in stats.keySet().toMutableList()) {
                     if (key.startsWith("kills_")) {
                         stats.remove(key)
                     }
                     if (key.startsWith("deaths_")) {
+                        stats.remove(key)
+                    }
+                    if (key.startsWith("mythos_burrows_")) {
                         stats.remove(key)
                     }
                 }
