@@ -94,6 +94,11 @@ class FetchData(private val apiKey: String, players: MutableMap<String, String>)
                         stats.remove(key)
                     }
                 }
+                for (key in member.keySet().toMutableList()) {
+                    if (key.startsWith("experience_skill_")) {
+                        member.remove(key)
+                    }
+                }
             }
         }
     }

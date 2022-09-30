@@ -12,6 +12,7 @@ class PlayerData {
     var kills = 0L
     val statsKillsReason = mutableMapOf<String, Long>()
     val statsDeathsReason = mutableMapOf<String, Long>()
+    val skillExperience = mutableMapOf<String, Long>()
 
     companion object {
         fun grab(uuid: String, file: File): PlayerData {
@@ -57,6 +58,15 @@ class PlayerData {
                             }
                         }
                     }
+                    for (key in member.keySet()) {
+                        if (key.startsWith("experience_skill_")) {
+                            val label = key.substring(17)
+                            val exp = member[key].asLong
+                            data.skillExperience[label] = exp
+                            println("found skill: $label $exp")
+                        }
+                    }
+
                 }
             }
 

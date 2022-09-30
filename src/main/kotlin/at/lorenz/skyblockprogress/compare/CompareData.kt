@@ -57,43 +57,47 @@ class CompareData(private val apiKey: String, players: MutableMap<String, String
     private fun compare(first: PlayerData, second: PlayerData) {
         val firstLastSave = dateFormat.format(first.fetchTime)
         val secondLastSave = dateFormat.format(second.fetchTime)
-        println("compare $firstLastSave with $secondLastSave")
 
-        print(makeCompareText("deathCount", first.deathCount, second.deathCount))
-        print(makeCompareText("statsDeaths", first.statsDeaths, second.statsDeaths))
+        val result = mutableListOf<String>()
 
-        print(makeCompareText("kills", first.kills, second.kills))
-        val statsKills = mutableListOf<String>()
-        for (entry in second.statsKillsReason) {
+        result.add(" ")
+        result.add("compare $firstLastSave with $secondLastSave")
+        result.add(" ")
+        result.add(makeCompareText("deathCount", first.deathCount, second.deathCount))
+        result.add(makeCompareText("statsDeaths", first.statsDeaths, second.statsDeaths))
+
+        result.add(makeCompareText("kills", first.kills, second.kills))
+        result.addAll(printListChange("stats-kills",first.statsKillsReason, second.statsKillsReason))
+        result.addAll(printListChange("skill-exp-gain",first.skillExperience, second.skillExperience))
+
+        for (line in result) {
+            if (line.isEmpty()) continue
+            println(line)
+        }
+    }
+
+    private fun printListChange(
+        listLabel: String,
+        first: MutableMap<String, Long>,
+        second: MutableMap<String, Long>,
+    ): List<String> {
+        val changedStats = mutableListOf<String>()
+        for (entry in second) {
             val label = entry.key
-            val newKills = entry.value
-            val oldKills = first.statsKillsReason.getOrDefault(label, 0)
-            if (newKills != oldKills) {
-                statsKills.add(makeCompareText(label, oldKills, newKills))
+            val newValue = entry.value
+            val oldValue = first.getOrDefault(label, 0)
+            if (newValue != oldValue) {
+                changedStats.add(makeCompareText(label, oldValue, newValue))
             }
         }
-        if (statsKills.isNotEmpty()) {
-            println("[stats-kills]")
-            for (kill in statsKills) {
-                print("  $kill")
+        val result = mutableListOf<String>()
+        if (changedStats.isNotEmpty()) {
+            result.add("\n[$listLabel]")
+            for (value in changedStats) {
+                result.add("  $value")
             }
         }
-
-        val statsDeaths = mutableListOf<String>()
-        for (entry in second.statsDeathsReason) {
-            val label = entry.key
-            val newKills = entry.value
-            val oldKills = first.statsDeathsReason.getOrDefault(label, 0)
-            if (newKills != oldKills) {
-                statsDeaths.add(makeCompareText(label, oldKills, newKills))
-            }
-        }
-        if (statsDeaths.isNotEmpty()) {
-            println("[stats-deaths]")
-            for (kill in statsDeaths) {
-                println("  $kill")
-            }
-        }
+        return result
     }
 
 
@@ -105,6 +109,6 @@ class CompareData(private val apiKey: String, players: MutableMap<String, String
         val aa = numberFormatter.format(a)
         val bb = numberFormatter.format(b)
         val diffFormat = numberFormatter.format(diff)
-        return "$label: $plus$diffFormat ($aa -> $bb)\n"
+        return "$label: $plus$diffFormat ($aa -> $bb)"
     }
 }
