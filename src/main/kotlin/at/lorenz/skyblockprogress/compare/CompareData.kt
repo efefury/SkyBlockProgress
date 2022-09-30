@@ -28,7 +28,7 @@ class CompareData(private val apiKey: String, players: MutableMap<String, String
         val map = mutableMapOf<PlayerData, Long>()
         for (file in parent.listFiles()) {
             val name = file.name
-            if (name.endsWith("-cleaned.json")) {
+            if (name.endsWith("_formatted.json")) {
                 val data = PlayerData.grab(uuid, file)
                 map[data] = data.fetchTime
             }
@@ -66,11 +66,12 @@ class CompareData(private val apiKey: String, players: MutableMap<String, String
         result.add(makeCompareText("deathCount", first.deathCount, second.deathCount))
         result.add(makeCompareText("statsDeaths", first.statsDeaths, second.statsDeaths))
 
-        result.addAll(printListChange("collection count", first.collectionCount, second.collectionCount))
+        result.addAll(printListChange("skill experience gain", first.skillExperience, second.skillExperience))
 
         result.add(makeCompareText("totalPetExpGained", first.totalPetExpGained, second.totalPetExpGained))
+        result.addAll(printListChange("pet experience", first.pexExperience, second.pexExperience))
 
-        result.addAll(printListChange("skill experience gain", first.skillExperience, second.skillExperience))
+        result.addAll(printListChange("collection count", first.collectionCount, second.collectionCount))
 
         result.add(makeCompareText("kills", first.kills, second.kills))
         result.addAll(printListChange("stats-kills", first.statsKillsReason, second.statsKillsReason))

@@ -51,11 +51,10 @@ class FetchData(private val apiKey: String, players: MutableMap<String, String>)
         }
 
         val time = dateFormat.format(System.currentTimeMillis())
-        val cleanedData = originalData.deepCopy()
-        cleanupData(cleanedData, uuid)
+        val formattedData = originalData.deepCopy()
+        cleanupData(formattedData, uuid)
 
-        val text = gson.toJson(cleanedData)
-
+        val text = gson.toJson(formattedData)
         for (file in parent.listFiles()) {
             val data = file.readText()
             val jsonObject = JsonParser.parseString(data) as JsonObject
@@ -67,14 +66,14 @@ class FetchData(private val apiKey: String, players: MutableMap<String, String>)
         }
 
         println("Saved data.")
-        File(parent, "$time.json").writeText(gson.toJson(originalData))
+        File(parent, "${time}_original.json").writeText(gson.toJson(originalData))
 
-        val leftoverData = cleanedData.deepCopy()
+        val leftoverData = formattedData.deepCopy()
         removeLeftovers(leftoverData, uuid)
-        File(parent, "$time-leftovers.json").writeText(gson.toJson(leftoverData))
+        File(parent, "${time}_unused.json").writeText(gson.toJson(leftoverData))
 
-        cleanedData.add("fetch_time", JsonPrimitive(System.currentTimeMillis()))
-        File(parent, "$time-cleaned.json").writeText(gson.toJson(cleanedData))
+        formattedData.add("fetch_time", JsonPrimitive(System.currentTimeMillis()))
+        File(parent, "${time}_formatted.json").writeText(gson.toJson(formattedData))
     }
 
     private fun removeLeftovers(profile: JsonObject, uuid: String) {
@@ -113,6 +112,7 @@ class FetchData(private val apiKey: String, players: MutableMap<String, String>)
                 }
             }
             member.remove("collection")
+            member.remove("pets")
         }
     }
 

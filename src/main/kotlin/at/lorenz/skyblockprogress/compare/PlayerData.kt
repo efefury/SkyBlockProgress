@@ -18,6 +18,7 @@ class PlayerData {
     val bestiarityKills = mutableMapOf<String, Long>()
     val bestiarityDeaths = mutableMapOf<String, Long>()
     val collectionCount = mutableMapOf<String, Long>()
+    val pexExperience = mutableMapOf<String, Long>()
 
     companion object {
         fun grab(uuid: String, file: File): PlayerData {
@@ -95,6 +96,15 @@ class PlayerData {
                             val count = collection[key].asLong
                             data.collectionCount[key] = count
 
+                        }
+                    }
+                    if (member.has("pets")) {
+                        val pets = member["pets"].asJsonArray
+                        for (entry in pets) {
+                            val pet = entry.asJsonObject
+                            val type = pet["type"].asString.lowercase()
+                            val exp = pet["exp"].asLong
+                            data.pexExperience[type] = exp
                         }
                     }
                 }
