@@ -148,8 +148,7 @@ class CompareData(private val apiKey: String, players: MutableMap<String, String
 }
 
 private fun Map<String, Long>.fixSlayerName(): MutableMap<String, Long> {
-    return this.toMutableMap().map { (key, value) ->
-        val tier = key.substring(key.length - 1).toInt() + 1
-        "tier $tier kills" to value
-    }.toMap().toMutableMap()
+    return mapKeys { (key, _) ->
+        "tier ${key.takeLast(1).toInt() + 1} kills"
+    }.toMutableMap()
 }
