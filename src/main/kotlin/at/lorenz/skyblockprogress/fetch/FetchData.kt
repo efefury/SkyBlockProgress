@@ -44,33 +44,56 @@ class FetchData(private val apiKey: String, players: MutableMap<String, String>)
         }
     }
 
-    private fun grabSkyblockData(playerData: JsonObject, uuid: String, profileName: String) {
+    private fun grabSkyblockData(originalData: JsonObject, uuid: String, profileName: String) {
         val parent = File("data/$uuid/$profileName")
         if (!parent.isDirectory) {
             parent.mkdirs()
         }
 
         val time = dateFormat.format(System.currentTimeMillis())
-        val rawData = playerData.deepCopy()
-        cleanupData(playerData, uuid)
+        val cleanedData = originalData.deepCopy()
+        cleanupData(cleanedData, uuid)
 
-        val text = gson.toJson(playerData)
-        println("Data loaded.")
+        val text = gson.toJson(cleanedData)
 
         for (file in parent.listFiles()) {
             val data = file.readText()
             val jsonObject = JsonParser.parseString(data) as JsonObject
             jsonObject.remove("fetch_time")
             if (gson.toJson(jsonObject) == text) {
-                println("No changes in player data, skipping!")
+                println("No changes!")
                 return
             }
         }
 
-        println("Saved new data.")
-        playerData.add("fetch_time", JsonPrimitive(System.currentTimeMillis()))
-        File(parent, "$time-cleaned.json").writeText(gson.toJson(playerData))
-        File(parent, "$time.json").writeText(gson.toJson(rawData))
+        println("Saved data.")
+        cleanedData.add("fetch_time", JsonPrimitive(System.currentTimeMillis()))
+        File(parent, "$time-cleaned.json").writeText(gson.toJson(cleanedData))
+        val leftoverData = cleanedData.deepCopy()
+        removeLeftovers(leftoverData, uuid)
+        File(parent, "$time-leftovers.json").writeText(gson.toJson(leftoverData))
+        File(parent, "$time.json").writeText(gson.toJson(originalData))
+    }
+
+    private fun removeLeftovers(profile: JsonObject, uuid: String) {
+        val members = profile["members"].asJsonObject
+        for (memberUuid in members.keySet()) {
+            val member = members[memberUuid].asJsonObject
+            member.remove("death_count")
+            if (member.has("stats")) {
+                val stats = member["stats"].asJsonObject
+                stats.remove("deaths")
+                stats.remove("kills")
+                for (key in stats.keySet().toMutableList()) {
+                    if (key.startsWith("kills_")) {
+                        stats.remove(key)
+                    }
+                    if (key.startsWith("deaths_")) {
+                        stats.remove(key)
+                    }
+                }
+            }
+        }
     }
 
     private fun cleanupData(profile: JsonObject, uuid: String) {
@@ -132,11 +155,19 @@ class FetchData(private val apiKey: String, players: MutableMap<String, String>)
             member.remove("trapper_quest")
             member.remove("coop_invitation")
 
+            member.remove("first_join")
+            member.remove("first_join_hub")
+            member.remove("fairy_souls")
+            member.remove("fairy_exchanges")
+            member.remove("achievement_spawned_island_types")
+            member.remove("perks")
+
             //TODO maybe use later
             member.remove("quests")
             member.remove("objectives")
             member.remove("visited_zones")
             member.remove("tutorial")
+            member.remove("visited_modes")
 
             if (member.has("pets")) {
                 val pets = member["pets"].asJsonArray

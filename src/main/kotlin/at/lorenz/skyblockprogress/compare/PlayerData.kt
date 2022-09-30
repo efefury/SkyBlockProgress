@@ -29,15 +29,15 @@ class PlayerData {
             }
 
             if (profile.has("members")) {
-                val member = profile["members"].asJsonObject
-                if (member.has(uuid)) {
-                    val player = member[uuid].asJsonObject
+                val members = profile["members"].asJsonObject
+                if (members.has(uuid)) {
+                    val member = members[uuid].asJsonObject
 
-                    if (player.has("death_count")) {
-                        data.deathCount = player["death_count"].asLong
+                    if (member.has("death_count")) {
+                        data.deathCount = member["death_count"].asLong
                     }
-                    if (player.has("stats")) {
-                        val stats = player["stats"].asJsonObject
+                    if (member.has("stats")) {
+                        val stats = member["stats"].asJsonObject
                         if (stats.has("deaths")) {
                             data.statsDeaths = stats["deaths"].asLong
                         }
