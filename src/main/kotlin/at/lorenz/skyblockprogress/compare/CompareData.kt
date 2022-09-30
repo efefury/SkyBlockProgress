@@ -51,17 +51,17 @@ class CompareData(private val apiKey: String, players: MutableMap<String, String
             if (i == 2) break
             i++
         }
-        compare(second!!, first!!)
+        compare(uuid, second!!, first!!)
     }
 
-    private fun compare(first: PlayerData, second: PlayerData) {
+    private fun compare(profileName: String, first: PlayerData, second: PlayerData) {
         val firstLastSave = dateFormat.format(first.fetchTime)
         val secondLastSave = dateFormat.format(second.fetchTime)
 
         val result = linkedSetOf<String>()
 
         result.add(" ")
-        result.add("compare $firstLastSave with $secondLastSave")
+        result.add("compare for $profileName: $firstLastSave with $secondLastSave")
         result.add(" ")
         result.add(makeCompareText("deathCount", first.deathCount, second.deathCount))
         result.add(makeCompareText("statsDeaths", first.statsDeaths, second.statsDeaths))
