@@ -67,12 +67,14 @@ class FetchData(private val apiKey: String, players: MutableMap<String, String>)
         }
 
         println("Saved data.")
-        cleanedData.add("fetch_time", JsonPrimitive(System.currentTimeMillis()))
-        File(parent, "$time-cleaned.json").writeText(gson.toJson(cleanedData))
+        File(parent, "$time.json").writeText(gson.toJson(originalData))
+
         val leftoverData = cleanedData.deepCopy()
         removeLeftovers(leftoverData, uuid)
         File(parent, "$time-leftovers.json").writeText(gson.toJson(leftoverData))
-        File(parent, "$time.json").writeText(gson.toJson(originalData))
+
+        cleanedData.add("fetch_time", JsonPrimitive(System.currentTimeMillis()))
+        File(parent, "$time-cleaned.json").writeText(gson.toJson(cleanedData))
     }
 
     private fun removeLeftovers(profile: JsonObject, uuid: String) {

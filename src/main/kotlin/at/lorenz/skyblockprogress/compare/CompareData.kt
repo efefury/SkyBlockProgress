@@ -75,7 +75,7 @@ class CompareData(private val apiKey: String, players: MutableMap<String, String
         if (statsKills.isNotEmpty()) {
             println("[stats-kills]")
             for (kill in statsKills) {
-                println("  $kill")
+                print("  $kill")
             }
         }
 
