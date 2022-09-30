@@ -1,40 +1,6 @@
-### IntelliJ IDEA ###
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
-
-### Eclipse ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-
-### VS Code ###
-.vscode/
-
-### Mac OS ###
-.DS_Store
-/.idea/
+/.idea
 /SkyBlockProgress2.iml
-/data/bb855349dfd84125a7505fc2cf543ad5/Zucchini/2022_09_30_11_18_21.json
-/data/bb855349dfd84125a7505fc2cf543ad5/Zucchini/2022_09_30_11_18_21-cleaned.json
-/data/bb855349dfd84125a7505fc2cf543ad5/Zucchini/2022_09_30_11_18_53.json
-/data/bb855349dfd84125a7505fc2cf543ad5/Zucchini/2022_09_30_11_18_53-cleaned.json
-/data/test.json
-/libs/gradle-api-7.2.jar
-/libs/gson-2.9.1.jar
-/libs/httpclient-4.3.6.jar
-/libs/httpcore-4.3.2.jar
+/data
+/libs
+META-INF
+/out
