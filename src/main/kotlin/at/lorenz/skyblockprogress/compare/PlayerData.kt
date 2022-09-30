@@ -94,7 +94,7 @@ class PlayerData {
                         val collection = member["collection"].asJsonObject
                         for (key in collection.keySet()) {
                             val count = collection[key].asLong
-                            data.collectionCount[key] = count
+                            data.collectionCount[key.lowercase()] = count
 
                         }
                     }

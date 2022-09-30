@@ -90,19 +90,19 @@ class CompareData(private val apiKey: String, players: MutableMap<String, String
         first: MutableMap<String, Long>,
         second: MutableMap<String, Long>,
     ): List<String> {
-        val changedStats = mutableListOf<String>()
+        val changedStats = mutableMapOf<String, Long>()
         for (entry in second) {
             val label = entry.key
             val newValue = entry.value
             val oldValue = first.getOrDefault(label, 0)
             if (newValue != oldValue) {
-                changedStats.add(makeCompareText(label, oldValue, newValue, true))
+                changedStats[makeCompareText(label, oldValue, newValue, true)] = newValue - oldValue
             }
         }
         val result = mutableListOf<String>()
         if (changedStats.isNotEmpty()) {
             result.add("\n[$listLabel]")
-            for (value in changedStats) {
+            for (value in changedStats.toList().sortedBy { (_, value) -> value }.reversed().toMap().keys) {
                 result.add("   $value")
             }
         }
