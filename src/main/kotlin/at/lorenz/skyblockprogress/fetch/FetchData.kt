@@ -112,6 +112,7 @@ class FetchData(private val apiKey: String, players: MutableMap<String, String>)
                     }
                 }
             }
+            member.remove("collection")
         }
     }
 

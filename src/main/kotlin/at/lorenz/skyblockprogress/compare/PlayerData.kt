@@ -17,6 +17,7 @@ class PlayerData {
 
     val bestiarityKills = mutableMapOf<String, Long>()
     val bestiarityDeaths = mutableMapOf<String, Long>()
+    val collectionCount = mutableMapOf<String, Long>()
 
     companion object {
         fun grab(uuid: String, file: File): PlayerData {
@@ -86,6 +87,14 @@ class PlayerData {
                                 val deaths = bestiary[key].asLong
                                 data.bestiarityDeaths[label] = deaths
                             }
+                        }
+                    }
+                    if (member.has("collection")) {
+                        val collection = member["collection"].asJsonObject
+                        for (key in collection.keySet()) {
+                            val count = collection[key].asLong
+                            data.collectionCount[key] = count
+
                         }
                     }
                 }

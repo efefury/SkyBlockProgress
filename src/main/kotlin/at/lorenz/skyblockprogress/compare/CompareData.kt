@@ -65,9 +65,12 @@ class CompareData(private val apiKey: String, players: MutableMap<String, String
         result.add(" ")
         result.add(makeCompareText("deathCount", first.deathCount, second.deathCount))
         result.add(makeCompareText("statsDeaths", first.statsDeaths, second.statsDeaths))
-        result.addAll(printListChange("skill experience gain", first.skillExperience, second.skillExperience))
+
+        result.addAll(printListChange("collection count", first.collectionCount, second.collectionCount))
 
         result.add(makeCompareText("totalPetExpGained", first.totalPetExpGained, second.totalPetExpGained))
+
+        result.addAll(printListChange("skill experience gain", first.skillExperience, second.skillExperience))
 
         result.add(makeCompareText("kills", first.kills, second.kills))
         result.addAll(printListChange("stats-kills", first.statsKillsReason, second.statsKillsReason))
