@@ -66,6 +66,7 @@ class CompareData(private val apiKey: String, players: MutableMap<String, String
 
         compareSlayers(result, first.slayers, second.slayers)
 
+        result.addAll(printListChange("crimson isle reputation", first.crimsonIsleReputation, second.crimsonIsleReputation))
         result.add(makeCompareText("mythology kills", first.mythologyKills, second.mythologyKills))
         result.addAll(printListChange("mythology burrows", first.mythologyData, second.mythologyData))
 

@@ -118,6 +118,12 @@ class FetchData(private val apiKey: String, players: MutableMap<String, String>)
             member.remove("collection")
             member.remove("pets")
             member.remove("slayer_bosses")
+
+            if (member.has("nether_island_player_data")) {
+                val netherIsland = member["nether_island_player_data"].asJsonObject
+                netherIsland.remove("mages_reputation")
+                netherIsland.remove("barbarians_reputation")
+            }
         }
     }
 

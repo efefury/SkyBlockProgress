@@ -24,6 +24,7 @@ class PlayerData {
     var mythologyKills = 0L
 
     val slayers = mutableMapOf<String, SlayerData>()
+    val crimsonIsleReputation = mutableMapOf<String, Long>()
 
     class SlayerData(val experience: Long, val bossKills: Map<String, Long>)
 
@@ -137,6 +138,16 @@ class PlayerData {
                                     bossKills[bossName] = kills
                                 }
                             }
+                        }
+                    }
+
+                    if (member.has("nether_island_player_data")) {
+                        val netherIsland = member["nether_island_player_data"].asJsonObject
+                        if (netherIsland.has("mages_reputation")) {
+                            data.crimsonIsleReputation["mages"] = netherIsland["mages_reputation"].asLong
+                        }
+                        if (netherIsland.has("barbarians_reputation")) {
+                            data.crimsonIsleReputation["barbarians"] = netherIsland["barbarians_reputation"].asLong
                         }
                     }
                 }
