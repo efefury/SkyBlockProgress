@@ -78,6 +78,7 @@ class CompareData(private val apiKey: String, players: MutableMap<String, String
 
         result.add(makeCompareText("kills", first.kills, second.kills))
         result.addAll(printListChange("stats-kills", first.statsKillsReason, second.statsKillsReason))
+        result.addAll(printListChange("stats-deaths", first.statsDeathsReason, second.statsDeathsReason))
         result.addAll(printListChange("bestiarity-kills", first.bestiarityKills, second.bestiarityKills))
         result.addAll(printListChange("bestiarity-deaths", first.bestiarityDeaths, second.bestiarityDeaths))
 
