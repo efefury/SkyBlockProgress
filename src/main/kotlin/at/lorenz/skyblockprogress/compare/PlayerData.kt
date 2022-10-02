@@ -19,6 +19,8 @@ class PlayerData {
     val bestiarityDeaths = mutableMapOf<String, Long>()
     val collectionCount = mutableMapOf<String, Long>()
     val pexExperience = mutableMapOf<String, Long>()
+    val normalFloorCompletions = mutableMapOf<String, Long>()
+    val mmFloorCompletions = mutableMapOf<String, Long>()
 
     val mythologyData = mutableMapOf<String, Long>()
     var mythologyKills = 0L
@@ -104,6 +106,14 @@ class PlayerData {
                                 val deaths = bestiary[key].asLong
                                 data.bestiarityDeaths[label] = deaths
                             }
+                        }
+                    }
+                    if (member.has("dungeons")) {
+                        val dungeons = member.getAsJsonObject("dungeons")
+                        if (dungeons.has("dungeon_types")) {
+                            val dungeonTypes = dungeons["dungeon_types"]
+                            val experience = dungeonTypes.asJsonObject["catacombs"].asJsonObject["experience"].asLong
+                            data.skillExperience["catacombs"] = experience
                         }
                     }
                     if (member.has("collection")) {
