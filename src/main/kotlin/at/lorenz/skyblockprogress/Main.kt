@@ -7,6 +7,10 @@ fun main(args: Array<String>) {
 
     val gson = GsonBuilder().setPrettyPrinting().create()
 
+    val parent = File("data/")
+    if (!parent.isDirectory) {
+        parent.mkdirs()
+    }
 
     val configFile = File("data/config.json")
     if (!configFile.exists()) {
@@ -17,9 +21,7 @@ fun main(args: Array<String>) {
         configObject.add("playerUuidStripped", JsonPrimitive(""))
         configObject.add("profileName", JsonPrimitive(""))
 
-
         configFile.writeText(gson.toJson(configObject))
-
     }
 
     val map = HashMap<String, String>()
