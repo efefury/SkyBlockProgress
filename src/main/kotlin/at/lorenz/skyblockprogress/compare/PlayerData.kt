@@ -15,13 +15,10 @@ class PlayerData {
     val skillExperience = mutableMapOf<String, Long>()
     var totalPetExpGained = 0L
 
-    val bestiarityKills = mutableMapOf<String, Long>()
-    val bestiarityDeaths = mutableMapOf<String, Long>()
+    val bestiaryKills = mutableMapOf<String, Long>()
+    val bestiaryDeaths = mutableMapOf<String, Long>()
     val collectionCount = mutableMapOf<String, Long>()
     val pexExperience = mutableMapOf<String, Long>()
-    val normalFloorCompletions = mutableMapOf<String, Long>()
-    val mmFloorCompletions = mutableMapOf<String, Long>()
-
     val mythologyData = mutableMapOf<String, Long>()
     var mythologyKills = 0L
 
@@ -99,20 +96,23 @@ class PlayerData {
                             if (key.startsWith("kills_")) {
                                 val label = key.substring(6)
                                 val kills = bestiary[key].asLong
-                                data.bestiarityKills[label] = kills
+                                data.bestiaryKills[label] = kills
                             }
                             if (key.startsWith("deaths_")) {
                                 val label = key.substring(7)
                                 val deaths = bestiary[key].asLong
-                                data.bestiarityDeaths[label] = deaths
+                                data.bestiaryDeaths[label] = deaths
                             }
                         }
                     }
                     if (member.has("dungeons")) {
                         val dungeons = member.getAsJsonObject("dungeons")
-                        if (dungeons.has("dungeon_types")) {
-                            val dungeonTypes = dungeons["dungeon_types"]
-                            val experience = dungeonTypes.asJsonObject["catacombs"].asJsonObject["experience"].asLong
+                        if (!dungeons.has("dungeon_types")) return data
+                        val dungeonTypes = dungeons["dungeon_types"].asJsonObject
+                        if (!dungeonTypes.has("catacombs")) return data
+                        val catacombs = dungeonTypes["catacombs"].asJsonObject
+                        if (catacombs.has("experience")) {
+                            val experience = catacombs["experience"].asLong
                             data.skillExperience["catacombs"] = experience
                         }
                     }

@@ -213,7 +213,6 @@ class FetchData(private val apiKey: String, players: MutableMap<String, String>)
                 dungeons.remove("selected_dungeon_class")
                 dungeons.remove("daily_runs")
                 dungeons.remove("treasures")
-
                 if (dungeons.has("dungeon_types")) {
                     val dungeonTypes = dungeons.get("dungeon_types").asJsonObject
                     for (typeName in dungeonTypes.keySet()) {
@@ -221,6 +220,9 @@ class FetchData(private val apiKey: String, players: MutableMap<String, String>)
                         type.remove("best_runs")
                         for (key in type.keySet().toMutableList()) {
                             if (key.startsWith("most_damage") || key == "most_damage") {
+                                type.remove(key)
+                            }
+                            if(key.startsWith("experience")) {
                                 type.remove(key)
                             }
                         }
