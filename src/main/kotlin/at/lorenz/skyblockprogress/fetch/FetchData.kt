@@ -115,6 +115,21 @@ class FetchData(private val apiKey: String, players: MutableMap<String, String>)
                     }
                 }
             }
+
+            if (member.has("dungeons")) {
+                val dungeonTypes = member["dungeons"].asJsonObject["dungeon_types"].asJsonObject
+                for (entry in dungeonTypes.entrySet()) {
+                    val key = entry.key
+
+                    if (key.equals("tier_completions")) {
+                        dungeonTypes.remove(key)
+                    }
+                    if (key.equals("experience")) {
+                        dungeonTypes.remove(key)
+                    }
+                }
+            }
+
             member.remove("collection")
             member.remove("pets")
             member.remove("slayer_bosses")
