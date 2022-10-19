@@ -118,15 +118,19 @@ class PlayerData {
                     }
                     if (member.has("dungeons")) {
                         val dungeonTypes = member["dungeons"].asJsonObject["dungeon_types"].asJsonObject
-                        for (entry in dungeonTypes.entrySet()) {
-                            val key = entry.key
-                            val value = entry.value
-
-                            if (key.equals("tier_completions")) {
-                                data.dungeonFloor[key] = data.dungeonFloor.getOrDefault(key, 0) + value.asLong
-                            }
-                            if (key.equals("experience")) {
-                                data.skillExperience["catacombs"] = value.asLong
+                        for (dungeonTypeEntry in dungeonTypes.entrySet()) {
+                            val dungeonType = dungeonTypeEntry.value.asJsonObject
+                            for (entry in dungeonType.entrySet()) {
+                                val key = entry.key
+                                val value = entry.value
+                                if (key.equals("tier_completions")) {
+                                    for (completions in value.asJsonObject.entrySet()) {
+                                        data.dungeonFloor[completions.key] = data.dungeonFloor.getOrDefault(completions.key, 0) + completions.value.asLong
+                                    }
+                                }
+                                if (key.equals("experience")) {
+                                    data.skillExperience["catacombs"] = value.asLong
+                                }
                             }
                         }
                     }
