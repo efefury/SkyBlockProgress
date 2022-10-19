@@ -61,23 +61,25 @@ class CompareData(private val apiKey: String, players: MutableMap<String, String
         result.add(" ")
         result.add("compare for $profileName: $firstLastSave with $secondLastSave")
         result.add(" ")
-        result.add(makeCompareText("deathCount", first.deathCount, second.deathCount))
-        result.add(makeCompareText("statsDeaths", first.statsDeaths, second.statsDeaths))
 
         compareSlayers(result, first.slayers, second.slayers)
 
-        result.addAll(printListChange("crimson isle reputation", first.crimsonIsleReputation, second.crimsonIsleReputation))
-        result.add(makeCompareText("mythology kills", first.mythologyKills, second.mythologyKills))
-        result.addAll(printListChange("mythology burrows", first.mythologyData, second.mythologyData))
+        result.addAll(
+            printListChange(
+                "Crimson Isle Reputation",
+                first.crimsonIsleReputation,
+                second.crimsonIsleReputation
+            )
+        )
+        result.addAll(printListChange("Mythology Burrows", first.mythologyData, second.mythologyData))
 
-        result.addAll(printListChange("skill experience gain", first.skillExperience, second.skillExperience))
+        result.addAll(printListChange("Skill XP", first.skillExperience, second.skillExperience))
+        result.addAll(printListChange("Coins", first.coins, second.coins))
 
-        result.add(makeCompareText("totalPetExpGained", first.totalPetExpGained, second.totalPetExpGained))
-        result.addAll(printListChange("pet experience", first.pexExperience, second.pexExperience))
+        result.addAll(printListChange("Pet XP", first.petExperience, second.petExperience))
 
-        result.addAll(printListChange("collection count", first.collectionCount, second.collectionCount))
+        result.addAll(printListChange("Collections", first.collectionCount, second.collectionCount))
 
-        result.add(makeCompareText("kills", first.kills, second.kills))
         result.addAll(printListChange("stats-kills", first.statsKillsReason, second.statsKillsReason))
         result.addAll(printListChange("stats-deaths", first.statsDeathsReason, second.statsDeathsReason))
         result.addAll(printListChange("bestiary-kills", first.bestiaryKills, second.bestiaryKills))
@@ -127,7 +129,7 @@ class CompareData(private val apiKey: String, players: MutableMap<String, String
         }
         val result = mutableListOf<String>()
         if (changedStats.isNotEmpty()) {
-            result.add("\n[$listLabel]")
+            result.add("\n===============[$listLabel]===============")
             for (value in changedStats.toList().sortedBy { (_, value) -> value }.reversed().toMap().keys) {
                 result.add("   $value")
             }

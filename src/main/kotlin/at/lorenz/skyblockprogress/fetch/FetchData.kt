@@ -130,7 +130,6 @@ class FetchData(private val apiKey: String, players: MutableMap<String, String>)
     private fun cleanupData(profile: JsonObject, uuid: String) {
         profile.remove("selected")
         profile.remove("last_save")
-        profile.remove("banking")
         val members = profile["members"].asJsonObject
         for (memberUuid in members.keySet()) {
             val member = members[memberUuid].asJsonObject
@@ -175,7 +174,6 @@ class FetchData(private val apiKey: String, players: MutableMap<String, String>)
             member.remove("favorite_arrow")
 
             member.remove("last_death")
-            member.remove("coin_purse")
             member.remove("last_save")
             member.remove("soulflow")
             member.remove("slayer_quest")
@@ -220,9 +218,6 @@ class FetchData(private val apiKey: String, players: MutableMap<String, String>)
                         type.remove("best_runs")
                         for (key in type.keySet().toMutableList()) {
                             if (key.startsWith("most_damage") || key == "most_damage") {
-                                type.remove(key)
-                            }
-                            if(key.startsWith("experience")) {
                                 type.remove(key)
                             }
                         }
